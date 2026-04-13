@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — NomCheck</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#f0ede8; --noir:#111010; --bleu:#1a1aff; --gris:#6b6b6b; --gris-clair:#d9d5ce; --blanc:#ffffff; --vert:#00a86b; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--noir); font-family:'Instrument Sans',sans-serif; font-weight:300; min-height:100vh; }
+nav { padding:20px 48px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--gris-clair); }
+.logo { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; letter-spacing:-1px; text-decoration:none; color:var(--noir); }
+.logo span { color:var(--bleu); }
+
+.content {
+  max-width: 560px; margin: 0 auto;
+  padding: 80px 24px;
+}
+h1 {
+  font-family:'Syne',sans-serif;
+  font-size:2.5rem; font-weight:800;
+  letter-spacing:-1.5px; margin-bottom:12px;
+}
+.subtitle { color:var(--gris); font-size:1rem; margin-bottom:48px; line-height:1.6; }
+
+.form-group { margin-bottom:20px; }
+label {
+  display:block;
+  font-size:0.75rem; font-weight:500;
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:8px; color:var(--gris);
+}
+input, textarea, select {
+  width:100%;
+  background:var(--blanc);
+  border:2px solid var(--noir);
+  border-radius:8px;
+  padding:14px 16px;
+  font-family:'Instrument Sans',sans-serif;
+  font-size:0.95rem;
+  color:var(--noir);
+  transition:border-color 0.2s;
+  box-shadow:3px 3px 0 var(--noir);
+}
+input:focus, textarea:focus, select:focus {
+  outline:none; border-color:var(--bleu);
+  box-shadow:3px 3px 0 var(--bleu);
+}
+textarea { min-height:140px; resize:vertical; }
+
+.submit-btn {
+  width:100%;
+  background:var(--bleu);
+  color:var(--blanc);
+  border:2px solid var(--bleu);
+  border-radius:100px;
+  padding:16px;
+  font-family:'Syne',sans-serif;
+  font-size:1rem; font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:8px;
+  box-shadow:3px 3px 0 var(--noir);
+}
+.submit-btn:hover { background:#0000cc; border-color:#0000cc; }
+
+.success-box {
+  display:none;
+  background:var(--noir);
+  color:var(--blanc);
+  border-radius:16px;
+  padding:40px;
+  text-align:center;
+  margin-top:32px;
+}
+.success-box h2 {
+  font-family:'Syne',sans-serif;
+  font-size:1.5rem; font-weight:800;
+  margin-bottom:12px;
+}
+.success-box p { color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.7; }
+
+.alt-contact {
+  margin-top:40px;
+  padding-top:32px;
+  border-top:1px solid var(--gris-clair);
+  text-align:center;
+}
+.alt-contact p { font-size:0.85rem; color:var(--gris); }
+.alt-contact a { color:var(--bleu); text-decoration:none; font-weight:500; }
+
+footer {
+  border-top:1px solid var(--gris-clair);
+  padding:32px 48px;
+  display:flex; justify-content:space-between;
+  font-size:0.8rem; color:var(--gris);
+  margin-top:80px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Nom<span>Check</span></a>
+  <a href="/" style="font-size:0.85rem;color:var(--gris);text-decoration:none;">← Retour</a>
+</nav>
+
+<div class="content">
+  <h1>Nous contacter</h1>
+  <p class="subtitle">Une question, un bug, une suggestion ? On vous répond sous 24h.</p>
+
+  <div id="contact-form">
+    <div class="form-group">
+      <label>Votre nom</label>
+      <input type="text" id="name" placeholder="Jean Dupont">
+    </div>
+
+    <div class="form-group">
+      <label>Votre email</label>
+      <input type="email" id="email" placeholder="jean@exemple.fr">
+    </div>
+
+    <div class="form-group">
+      <label>Sujet</label>
+      <select id="subject">
+        <option value="question">Question générale</option>
+        <option value="bug">Signaler un bug</option>
+        <option value="suggestion">Suggestion d'amélioration</option>
+        <option value="pro">Question sur l'offre Pro</option>
+        <option value="autre">Autre</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Message</label>
+      <textarea id="message" placeholder="Décrivez votre demande..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="sendMessage()">Envoyer le message →</button>
+  </div>
+
+  <div class="success-box" id="success-box">
+    <h2>✓ Message envoyé !</h2>
+    <p>Merci pour votre message. Nous vous répondrons à l'adresse indiquée sous 24 heures.</p>
+  </div>
+
+  <div class="alt-contact">
+    <p>Vous pouvez aussi nous écrire directement à <a href="mailto:nomcheck.contact@gmail.com">nomcheck.contact@gmail.com</a></p>
+  </div>
+</div>
+
+<footer>
+  <div style="font-family:'Syne',sans-serif;font-weight:800;">Nom<span style="color:var(--bleu)">Check</span></div>
+  <div>© 2026 NomCheck</div>
+</footer>
+
+<script>
+function sendMessage() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value.trim();
+
+  if (!name || !email || !message) {
+    alert('Veuillez remplir tous les champs.');
+    return;
+  }
+
+  // Ouvre le client mail avec les infos pré-remplies
+  const subjectLabels = {
+    question: 'Question générale',
+    bug: 'Signaler un bug',
+    suggestion: 'Suggestion',
+    pro: 'Question offre Pro',
+    autre: 'Autre'
+  };
+
+  const mailtoLink = `mailto:nomcheck.contact@gmail.com?subject=[NomCheck] ${subjectLabels[subject]} - ${name}&body=Nom: ${name}%0AEmail: ${email}%0A%0AMessage:%0A${encodeURIComponent(message)}`;
+  window.location.href = mailtoLink;
+
+  // Afficher confirmation
+  document.getElementById('contact-form').style.display = 'none';
+  document.getElementById('success-box').style.display = 'block';
+}
+</script>
+</body>
+</html>
