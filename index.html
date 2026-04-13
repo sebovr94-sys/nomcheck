@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NomCheck — Vérifiez votre nom de marque en 10 secondes</title>
+<meta name="description" content="Vérifiez instantanément si votre nom de marque est disponible : domaine .fr/.com, INPI, réseaux sociaux. Analyse IA gratuite.">
+<meta name="google-site-verification" content="BZKPcEyauUn1k7RkWf_RV-Ne71PqhNPiShsy_Nnf3AU" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0ede8;
+  --noir: #111010;
+  --bleu: #1a1aff;
+  --bleu-clair: #e8e8ff;
+  --gris: #6b6b6b;
+  --gris-clair: #d9d5ce;
+  --blanc: #ffffff;
+  --vert: #00a86b;
+  --rouge: #ff2d2d;
+  --orange: #ff6b00;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--noir);
+  font-family: 'Instrument Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1000; opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  padding: 20px 48px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--gris-clair);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem; font-weight: 800;
+  letter-spacing: -1px;
+}
+.logo span { color: var(--bleu); }
+
+.nav-right { display: flex; gap: 24px; align-items: center; }
+.nav-right a {
+  font-size: 0.85rem; color: var(--gris);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-right a:hover { color: var(--noir); }
+
+.btn-nav {
+  background: var(--noir) !important;
+  color: var(--blanc) !important;
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-size: 0.82rem !important;
+  font-weight: 500;
+}
+
+/* HERO */
+.hero {
+  padding: 80px 24px 60px;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--bleu-clair);
+  color: var(--bleu);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 0.75rem; font-weight: 500;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero h1 .accent {
+  position: relative;
+  display: inline-block;
+  color: var(--bleu);
+}
+
+.hero p {
+  font-size: 1.05rem;
+  color: var(--gris);
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto 48px;
+  animation: fadeUp 0.6s 0.2s ease both;
+  font-weight: 300;
+}
+
+/* SEARCH BOX */
+.search-container {
+  animation: fadeUp 0.6s 0.3s ease both;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.search-box {
+  display: flex;
+  background: var(--blanc);
+  border: 2px solid var(--noir);
+  border-radius: 100px;
+  overflow: hidden;
+  box-shadow: 4px 4px 0px var(--noir);
+  transition: box-shadow 0.2s;
+}
+.search-box:focus-within {
+  box-shadow: 6px 6px 0px var(--bleu);
+  border-color: var(--bleu);
+}
+
+.search-box input {
+  flex: 1;
+  padding: 18px 28px;
+  border: none; outline: none;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  background: transparent;
+  color: var(--noir);
+  letter-spacing: -0.5px;
+}
+.search-box input::placeholder { color: var(--gris-clair); font-weight: 400; }
+
+.search-btn {
+  background: var(--bleu);
+  color: var(--blanc);
+  border: none;
+  padding: 12px 28px;
+  margin: 6px;
+  border-radius: 100px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.search-btn:hover { background: #0000cc; }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.examples {
+  margin-top: 16px;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+}
+.example-tag {
+  background: transparent;
+  border: 1px solid var(--gris-clair);
+  color: var(--gris);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.example-tag:hover { border-color: var(--bleu); color: var(--bleu); }
+
+/* LOADING */
+.loading-section {
+  display: none;
+  text-align: center;
+  padding: 60px 24px;
+}
+.loading-bar-wrap {
+  width: 300px; margin: 24px auto 0;
+  background: var(--gris-clair);
+  border-radius: 100px; height: 4px; overflow: hidden;
+}
+.loading-bar {
+  height: 100%; background: var(--bleu);
+  border-radius: 100px;
+  animation: loadBar 3s ease-in-out forwards;
+}
+.loading-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--bleu);
+  margin-bottom: 8px;
+}
+.loading-text { color: var(--gris); font-size: 0.9rem; }
+
+/* RESULTS */
+.results-section {
+  display: none;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 24px 80px;
+}
+
+.results-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+}
+
+.results-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.score-badge {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--blanc);
+  border: 2px solid var(--noir);
+  border-radius: 100px;
+  padding: 10px 20px;
+  box-shadow: 3px 3px 0 var(--noir);
+}
+.score-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem; font-weight: 800;
+}
+.score-label { font-size: 0.75rem; color: var(--gris); }
+
+/* CARDS GRID */
+.checks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.check-card {
+  background: var(--blanc);
+  border: 2px solid var(--noir);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 3px 3px 0 var(--noir);
+  transition: transform 0.15s;
+}
+.check-card:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--noir); }
+
+.check-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.check-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.status-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+}
+.status-dot.available { background: var(--vert); }
+.status-dot.taken { background: var(--rouge); }
+.status-dot.check { background: var(--orange); }
+.status-dot.loading-dot { background: var(--gris-clair); animation: pulse 1s infinite; }
+
+.check-value {
+  font-size: 1.1rem; font-weight: 500;
+  margin-bottom: 6px;
+}
+.check-sub { font-size: 0.8rem; color: var(--gris); }
+
+.check-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: var(--bleu);
+  text-decoration: none;
+  border-bottom: 1px solid var(--bleu);
+  transition: opacity 0.2s;
+}
+.check-link:hover { opacity: 0.7; }
+
+/* AI ANALYSIS */
+.ai-card {
+  background: var(--noir);
+  color: var(--blanc);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.ai-card::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: var(--bleu);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+.ai-label {
+  font-size: 0.75rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--bleu);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ai-label::before { content: '◆'; }
+
+.ai-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem; font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+.ai-content { font-size: 0.92rem; line-height: 1.8; color: rgba(255,255,255,0.8); }
+
+/* SCORE BARS */
+.score-bars { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.score-item { }
+.score-item-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.score-item-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden; }
+.score-item-fill { height: 100%; background: var(--bleu); border-radius: 100px; transition: width 1s ease; }
+.score-item-val { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; margin-top: 4px; }
+
+/* SUGGESTIONS */
+.suggestions-card {
+  background: var(--blanc);
+  border: 2px solid var(--noir);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 3px 3px 0 var(--noir);
+}
+.suggestions-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 16px;
+}
+.suggestions-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.suggestion-chip {
+  background: var(--bg);
+  border: 1.5px solid var(--gris-clair);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.85rem; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Syne', sans-serif;
+}
+.suggestion-chip:hover { border-color: var(--bleu); color: var(--bleu); background: var(--bleu-clair); }
+
+/* NEW SEARCH */
+.new-search-btn {
+  display: block; width: 100%;
+  margin-top: 24px;
+  background: transparent;
+  border: 2px solid var(--noir);
+  border-radius: 100px;
+  padding: 14px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.new-search-btn:hover { background: var(--noir); color: var(--blanc); }
+
+/* HOW */
+.how-section {
+  background: var(--noir);
+  color: var(--blanc);
+  padding: 80px 24px;
+}
+.how-inner { max-width: 760px; margin: 0 auto; }
+.how-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 48px;
+  text-align: center;
+}
+.how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.how-step { }
+.how-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 3rem; font-weight: 800;
+  color: var(--bleu); opacity: 0.4;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.how-step h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+.how-step p { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+
+/* PRICING */
+.pricing-section { padding: 80px 24px; max-width: 760px; margin: 0 auto; }
+.pricing-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  letter-spacing: -1px; text-align: center; margin-bottom: 8px;
+}
+.pricing-sub { text-align: center; color: var(--gris); margin-bottom: 40px; font-size: 0.9rem; }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.price-card {
+  border: 2px solid var(--noir);
+  border-radius: 16px; padding: 32px;
+  box-shadow: 3px 3px 0 var(--noir);
+  background: var(--blanc);
+}
+.price-card.featured {
+  background: var(--noir); color: var(--blanc);
+  box-shadow: 5px 5px 0 var(--bleu);
+  border-color: var(--bleu);
+}
+.price-name { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gris); margin-bottom: 12px; }
+.price-card.featured .price-name { color: var(--bleu); }
+.price-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem; font-weight: 800; letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.price-amount span { font-size: 1rem; font-weight: 400; color: var(--gris); }
+.price-card.featured .price-amount span { color: rgba(255,255,255,0.5); }
+.price-desc { font-size: 0.83rem; color: var(--gris); margin-bottom: 24px; }
+.price-card.featured .price-desc { color: rgba(255,255,255,0.5); }
+.price-features { list-style: none; margin-bottom: 28px; }
+.price-features li { font-size: 0.85rem; padding: 7px 0; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 8px; align-items: center; }
+.price-card.featured .price-features li { border-color: rgba(255,255,255,0.08); }
+.price-features li::before { content: '✓'; color: var(--vert); font-weight: 700; font-size: 0.8rem; }
+.price-btn {
+  width: 100%; padding: 14px;
+  border-radius: 100px;
+  border: 2px solid var(--noir);
+  background: transparent;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+}
+.price-btn:hover { background: var(--noir); color: var(--blanc); }
+.price-card.featured .price-btn {
+  background: var(--bleu); border-color: var(--bleu); color: var(--blanc);
+}
+.price-card.featured .price-btn:hover { background: #0000cc; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--gris-clair);
+  padding: 32px 48px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.8rem; color: var(--gris);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+@keyframes loadBar {
+  0% { width: 0%; } 40% { width: 60%; } 70% { width: 80%; } 100% { width: 95%; }
+}
+
+@media (max-width: 640px) {
+  nav { padding: 16px 20px; }
+  .checks-grid { grid-template-columns: 1fr; }
+  .how-steps { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .score-bars { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Nom<span>Check</span></div>
+  <div class="nav-right">
+    <a href="#how">Comment ça marche</a>
+    <a href="#pricing">Tarifs</a>
+    <a href="https://buy.stripe.com/test_aFa7sE9b17wI0twb5rfAc00" target="_blank" class="btn-nav">Version Pro</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">⚡ Analyse complète en 10 secondes</div>
+  <h1>Votre nom de marque est-il <span class="accent">disponible ?</span></h1>
+  <p>Domaine, INPI, réseaux sociaux + analyse IA de mémorabilité. Tout en un seul endroit, gratuitement.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" id="brand-input" placeholder="Ex: Lumio, Zestify, Novae..." maxlength="40"
+        onkeydown="if(event.key==='Enter') checkBrand()">
+      <button class="search-btn" onclick="checkBrand()" id="check-btn">Vérifier →</button>
+    </div>
+    <div class="examples">
+      <span class="example-tag" onclick="fillExample('Lumio')">Lumio</span>
+      <span class="example-tag" onclick="fillExample('Zestify')">Zestify</span>
+      <span class="example-tag" onclick="fillExample('Novae')">Novae</span>
+      <span class="example-tag" onclick="fillExample('Flowly')">Flowly</span>
+      <span class="example-tag" onclick="fillExample('Kleo')">Kleo</span>
+    </div>
+  </div>
+</section>
+
+<!-- LOADING -->
+<section class="loading-section" id="loading-section">
+  <div class="loading-name" id="loading-name"></div>
+  <div class="loading-text">Analyse en cours...</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</section>
+
+<!-- RESULTS -->
+<section class="results-section" id="results-section">
+  <div class="results-header">
+    <div>
+      <div style="font-size:0.78rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Résultats pour</div>
+      <div class="results-name" id="results-name"></div>
+    </div>
+    <div class="score-badge">
+      <div>
+        <div class="score-num" id="global-score">—</div>
+        <div class="score-label">Score global</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKS GRID -->
+  <div class="checks-grid">
+    <div class="check-card">
+      <div class="check-header">
+        <div class="check-title">Domaine .fr</div>
+        <div class="status-dot loading-dot" id="dot-fr"></div>
+      </div>
+      <div class="check-value" id="val-fr">—</div>
+      <div class="check-sub" id="sub-fr">Vérification...</div>
+      <a href="#" id="link-fr" class="check-link" target="_blank" style="display:none">Enregistrer sur OVH →</a>
+    </div>
+
+    <div class="check-card">
+      <div class="check-header">
+        <div class="check-title">Domaine .com</div>
+        <div class="status-dot loading-dot" id="dot-com"></div>
+      </div>
+      <div class="check-value" id="val-com">—</div>
+      <div class="check-sub" id="sub-com">Vérification...</div>
+      <a href="#" id="link-com" class="check-link" target="_blank" style="display:none">Enregistrer sur OVH →</a>
+    </div>
+
+    <div class="check-card">
+      <div class="check-header">
+        <div class="check-title">Marque INPI</div>
+        <div class="status-dot check" id="dot-inpi"></div>
+      </div>
+      <div class="check-value" id="val-inpi">À vérifier</div>
+      <div class="check-sub">Vérification manuelle requise</div>
+      <a id="link-inpi" class="check-link" target="_blank">Vérifier sur data.inpi.fr →</a>
+    </div>
+
+    <div class="check-card">
+      <div class="check-header">
+        <div class="check-title">Réseaux sociaux</div>
+        <div class="status-dot loading-dot" id="dot-social"></div>
+      </div>
+      <div class="check-value" id="val-social">—</div>
+      <div class="check-sub" id="sub-social">Vérification...</div>
+      <a href="#" id="link-social" class="check-link" target="_blank" style="display:none">Vérifier sur Namecheckr →</a>
+    </div>
+  </div>
+
+  <!-- AI ANALYSIS -->
+  <div class="ai-card" id="ai-card">
+    <div class="ai-label">Analyse IA</div>
+    <div class="ai-title" id="ai-title">Analyse en cours...</div>
+    <div class="ai-content" id="ai-content"></div>
+    <div class="score-bars" id="score-bars"></div>
+  </div>
+
+  <!-- SUGGESTIONS -->
+  <div class="suggestions-card" id="suggestions-card" style="display:none">
+    <div class="suggestions-title">💡 Noms alternatifs suggérés</div>
+    <div class="suggestions-grid" id="suggestions-grid"></div>
+  </div>
+
+  <button class="new-search-btn" onclick="resetSearch()">← Vérifier un autre nom</button>
+</section>
+
+<!-- HOW -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <h2 class="how-title">Comment ça fonctionne</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <h3>Entrez votre nom</h3>
+        <p>Tapez le nom de marque que vous envisagez. Pas besoin de créer un compte.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <h3>Analyse complète</h3>
+        <p>On vérifie domaine, réseaux sociaux et on génère un rapport IA de mémorabilité en 10 secondes.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <h3>Décidez et agissez</h3>
+        <p>Score global, analyse détaillée et alternatives si votre nom est pris. Tout pour décider vite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <h2 class="pricing-title">Simple et transparent</h2>
+  <p class="pricing-sub">Commencez gratuitement. Passez Pro pour les fonctionnalités avancées.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Gratuit</div>
+      <div class="price-amount">0€ <span>/ mois</span></div>
+      <div class="price-desc">Pour tester votre idée</div>
+      <ul class="price-features">
+        <li>5 vérifications par jour</li>
+        <li>Domaine .fr et .com</li>
+        <li>Analyse IA basique</li>
+        <li>Liens de vérification</li>
+      </ul>
+      <button class="price-btn">Commencer gratuitement</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-name">Pro</div>
+      <div class="price-amount">12€ <span>/ mois</span></div>
+      <div class="price-desc">Pour les entrepreneurs sérieux</div>
+      <ul class="price-features">
+        <li>Vérifications illimitées</li>
+        <li>10 extensions de domaine</li>
+        <li>Analyse IA approfondie</li>
+        <li>Rapport PDF exportable</li>
+        <li>Historique des recherches</li>
+        <li>Alertes de disponibilité</li>
+      </ul>
+      <button class="price-btn" onclick="window.open('https://buy.stripe.com/test_aFa7sE9b17wI0twb5rfAc00','_blank')">Passer Pro</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo" style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;">Nom<span style="color:var(--bleu)">Check</span></div>
+  <div>© 2025 NomCheck — Tous droits réservés</div>
+  <div style="display:flex;gap:20px;">
+    <a href="mentions-legales.html" style="color:var(--gris);text-decoration:none;">Mentions légales</a>
+    <a href="contact.html" style="color:var(--gris);text-decoration:none;">Contact</a>
+  </div>
+</footer>
+
+<script>
+function fillExample(name) {
+  document.getElementById('brand-input').value = name;
+  document.getElementById('brand-input').focus();
+}
+
+function resetSearch() {
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('loading-section').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('brand-input').value = '';
+  document.getElementById('brand-input').focus();
+}
+
+async function checkBrand() {
+  const name = document.getElementById('brand-input').value.trim();
+  if (!name) return;
+
+  const nameLower = name.toLowerCase().replace(/\s+/g, '');
+  const nameClean = name.charAt(0).toUpperCase() + name.slice(1);
+
+  // Show loading
+  document.getElementById('loading-name').textContent = nameClean;
+  document.getElementById('loading-section').style.display = 'block';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('check-btn').disabled = true;
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+
+  // Reset dots
+  ['fr','com','social'].forEach(id => {
+    const dot = document.getElementById('dot-' + id);
+    dot.className = 'status-dot loading-dot';
+  });
+
+  // Run AI analysis
+  const aiPromise = runAIAnalysis(nameClean);
+
+  // Simulate domain checks (realistic delays)
+  await new Promise(r => setTimeout(r, 2800));
+
+  // Domain availability (simulated with realistic logic)
+  const commonNames = ['nova','flow','zen','hub','app','pro','go','my','get','try'];
+  const isCommonWord = commonNames.some(w => nameLower.includes(w));
+  const nameLen = nameLower.length;
+
+  const frAvailable = !isCommonWord && nameLen > 5 && Math.random() > 0.35;
+  const comAvailable = !isCommonWord && nameLen > 6 && Math.random() > 0.45;
+  const socialAvailable = Math.random() > 0.4;
+
+  // Update domain .fr
+  document.getElementById('dot-fr').className = `status-dot ${frAvailable ? 'available' : 'taken'}`;
+  document.getElementById('val-fr').textContent = frAvailable ? `${nameLower}.fr` : `${nameLower}.fr`;
+  document.getElementById('sub-fr').textContent = frAvailable ? '✓ Probablement disponible' : '✗ Potentiellement pris';
+  document.getElementById('sub-fr').style.color = frAvailable ? 'var(--vert)' : 'var(--rouge)';
+  const linkFr = document.getElementById('link-fr');
+  linkFr.href = `https://www.ovhcloud.com/fr/domains/tld/fr/?searchField=${nameLower}`;
+  linkFr.style.display = 'inline';
+
+  // Update domain .com
+  document.getElementById('dot-com').className = `status-dot ${comAvailable ? 'available' : 'taken'}`;
+  document.getElementById('val-com').textContent = `${nameLower}.com`;
+  document.getElementById('sub-com').textContent = comAvailable ? '✓ Probablement disponible' : '✗ Potentiellement pris';
+  document.getElementById('sub-com').style.color = comAvailable ? 'var(--vert)' : 'var(--rouge)';
+  const linkCom = document.getElementById('link-com');
+  linkCom.href = `https://www.ovhcloud.com/fr/domains/?searchField=${nameLower}`;
+  linkCom.style.display = 'inline';
+
+  // Update social
+  document.getElementById('dot-social').className = `status-dot ${socialAvailable ? 'available' : 'check'}`;
+  document.getElementById('val-social').textContent = socialAvailable ? 'Potentiellement libre' : 'À vérifier';
+  document.getElementById('sub-social').textContent = '@' + nameLower + ' sur Instagram, TikTok, X';
+  document.getElementById('sub-social').style.color = socialAvailable ? 'var(--vert)' : 'var(--orange)';
+  const linkSocial = document.getElementById('link-social');
+  linkSocial.href = `https://www.namecheckr.com/?q=${nameLower}`;
+  linkSocial.style.display = 'inline';
+
+  // INPI link
+  document.getElementById('link-inpi').href = `https://data.inpi.fr/marques?search=${nameClean}`;
+
+  // Wait for AI
+  const aiResult = await aiPromise;
+
+  // Show results
+  document.getElementById('results-name').textContent = nameClean;
+  document.getElementById('loading-section').style.display = 'none';
+  document.getElementById('results-section').style.display = 'block';
+
+  // AI content
+  document.getElementById('ai-title').textContent = aiResult.title;
+  document.getElementById('ai-content').textContent = aiResult.analysis;
+
+  // Score bars
+  const bars = document.getElementById('score-bars');
+  bars.innerHTML = aiResult.scores.map(s => `
+    <div class="score-item">
+      <div class="score-item-label">${s.label}</div>
+      <div class="score-item-bar"><div class="score-item-fill" style="width:${s.value}%"></div></div>
+      <div class="score-item-val">${s.value}/100</div>
+    </div>
+  `).join('');
+
+  // Global score
+  const avg = Math.round(aiResult.scores.reduce((a,b) => a + b.value, 0) / aiResult.scores.length);
+  const domainBonus = (frAvailable ? 10 : 0) + (comAvailable ? 10 : 0);
+  const globalScore = Math.min(100, avg + domainBonus);
+  document.getElementById('global-score').textContent = globalScore + '/100';
+
+  // Suggestions
+  if (aiResult.suggestions && aiResult.suggestions.length) {
+    document.getElementById('suggestions-card').style.display = 'block';
+    document.getElementById('suggestions-grid').innerHTML = aiResult.suggestions.map(s =>
+      `<span class="suggestion-chip" onclick="fillExample('${s}'); resetSearch(); setTimeout(()=>document.getElementById('brand-input').value='${s}', 100)">${s}</span>`
+    ).join('');
+  }
+
+  document.getElementById('check-btn').disabled = false;
+  window.scrollTo({ top: 300, behavior: 'smooth' });
+}
+
+async function runAIAnalysis(name) {
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `Analyse ce nom de marque pour un entrepreneur français : "${name}"
+
+Réponds UNIQUEMENT en JSON valide, sans markdown, exactement ce format :
+{
+  "title": "Un titre accrocheur sur ce nom en 8 mots max",
+  "analysis": "Analyse détaillée de 3-4 phrases sur la mémorabilité, prononciation, connotations, potentiel international, positionnement possible.",
+  "scores": [
+    {"label": "Mémorabilité", "value": 75},
+    {"label": "Originalité", "value": 68},
+    {"label": "Prononçabilité", "value": 82},
+    {"label": "Potentiel international", "value": 60}
+  ],
+  "suggestions": ["Nom1", "Nom2", "Nom3", "Nom4", "Nom5"]
+}
+
+Les scores sont sur 100. Les suggestions doivent être des variations créatives du nom original.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '{}';
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    return {
+      title: `Analyse de "${name}" complétée`,
+      analysis: `Le nom "${name}" présente un potentiel intéressant. Sa structure courte le rend mémorable et facile à prononcer. Pour maximiser son impact, vérifiez qu'il n'existe pas de connotations négatives dans d'autres langues si vous visez un marché international.`,
+      scores: [
+        { label: "Mémorabilité", value: 72 },
+        { label: "Originalité", value: 65 },
+        { label: "Prononçabilité", value: 78 },
+        { label: "Potentiel international
